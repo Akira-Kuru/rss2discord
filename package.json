@@ -1,0 +1,27 @@
+{
+  "name": "rss2discord",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "if [ -n \"$TERM\" ]; then clear; fi && concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "concurrently": "^8.2.0",
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1",
+    "node-schedule": "^2.1.1",
+    "nodemon": "^3.0.1",
+    "rss-parser": "^3.13.0",
+    "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "@types/node-schedule": "^2.1.0",
+    "eslint": "^8.50.0"
+  }
+}
