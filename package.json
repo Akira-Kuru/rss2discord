@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node dist/bot.js",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "if [ -n \"$TERM\" ]; then clear; fi && concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    "dev-webhook": "if [ -n \"$TERM\" ]; then clear; fi && concurrently \"npx tsc --watch\" \"nodemon -q dist/webhook.js\"",
+    "dev": "if [ -n \"$TERM\" ]; then clear; fi && concurrently \"npx tsc --watch\" \"nodemon -q dist/bot.js\""
   },
   "author": "",
   "license": "ISC",

@@ -8,15 +8,20 @@ dotenv.config({});
 
 const discordWebhookUrl = process.env.DISCORD_WEBHOOK!;
 const rssFeedUrl = 'https://' + process.env.RSS_DOMAIN! + '/' + process.env.RSS_USERNAME! + '/rss';
-const webhook = new WebhookClient({ url: discordWebhookUrl });
+const webhook = new WebhookClient({url: discordWebhookUrl});
 
-const job = schedule.scheduleJob('*/10 * * * * *', () => {
+// const job = schedule.scheduleJob('*/10 * * * * *', () => {
+//   runTask();
+// });
+
+(async () => {
   runTask();
-});
+})();
 
 async function runTask() {
-  const feed = await fetchRSSFeed(rssFeedUrl);
-  await sendToWebhook(feed);
+  // const feed = await fetchRSSFeed(rssFeedUrl);
+  // await sendToWebhook(feed);
+  
 }
 
 async function fetchRSSFeed(rssFeedUrl: string) {
@@ -36,13 +41,15 @@ async function sendToWebhook(feed: any) {
     let embed = new EmbedBuilder()
       .setColor(0x0099FF)
       .setURL(latestItem?.link?.replace('#m', '').replace(process.env.RSS_DOMAIN!, 'x.com') as string)
-      .setAuthor({ name: feed?.image?.title as string, iconURL: feed?.image?.url, url: `https://x.com/${process.env.RSS_USERNAME!}` })
+      .setAuthor({ name: feed?.image?.title as string, iconURL: feed?.image?.url, url: `https://weenie.com/${process.env.RSS_USERNAME!}` })
       .setDescription(latestItem?.content
         ?.replace(/<\/(div|p|h[1-6])>/g, '$&\n\n') // Add double line break after closing tags for div, p, and heading tags
         ?.replace(/(<(br|\/li|\/ul|\/ol)>)+/g, '\n') // Replace br, closing li, closing ul, and closing ol tags with a newline
         .replace(/(<([^>]+)>)/gi, '') as string)
       .setTimestamp()
       .setFooter({ text: process.env.DISCORD_BOT_NAME!, iconURL: process.env.DISCORD_BOT_ICON! });
+
+
 
     if (latestItem?.content?.match('<img')) {
       const match = latestItem?.content?.match(/<img.*?src="(.*?)"/);
@@ -59,6 +66,12 @@ async function sendToWebhook(feed: any) {
       console.log(embed);
       console.log('RSS feed delivered to Discord webhook successfully!');
     } else {
+      webhook.send({
+        content: `[Tweeted](${latestItem?.link?.replace('#m', '').replace(process.env.RSS_DOMAIN!, 'x.com')})`,
+        username: process.env.DISCORD_BOT_NAME!,
+        avatarURL: process.env.DISCORD_BOT_ICON!,
+        embeds: [embed]
+      });
       console.log('its a retweet');
     }
   } catch (error) {
